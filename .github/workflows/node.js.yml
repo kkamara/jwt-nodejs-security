@@ -1,0 +1,43 @@
+name: Run CI
+
+on: [push, pull_request]
+
+jobs:
+  node-react-boilerplate:
+    name: pipeline (Node ${{ matrix.node-version }})
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: 'secret'
+          MYSQL_DATABASE: 'nrb-db'
+          MYSQL_USER: 'user'
+          MYSQL_PASSWORD: 'secret'
+        ports:
+          - 3306/tcp
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    strategy:
+      matrix:
+        node-version: ['20.x']
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ matrix.node-version }}
+    - uses: mskelton/setup-yarn@v1
+      with:
+        flags: --immutable-cache
+    - name: Setup Env Variables
+      run: |
+          cp .env.example .env
+          sed -i "s/APP_URL=http:\/\/localhost/APP_URL=http:\/\/127.0.0.1:8000/g" .env
+          sed -i "s/3306/${{ job.services.mysql.ports['3306'] }}/g" .env
+          sed -i "s/DB_HOST=mysql/DB_HOST=127.0.0.1/g" .env
+          sed -i "s/local/testing/g" .env
+    - name: Install dependencies
+      run: yarn install --silent
+    - name: Run tests
+      run: yarn run test
+
