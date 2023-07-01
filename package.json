@@ -1,22 +1,23 @@
 {
-  "name": "jwt-nodejwt-security",
+  "name": "jwt-nodejs-app",
   "version": "1.0.0",
   "description": "Node.js for better app security.",
-  "main": "src/app.js",
+  "main": "src/app.ts",
   "scripts": {
     "test": "mocha tests/",
-    "start": "yarn ts-node-dev src/app.ts"
+    "tsc": "tsc",
+    "start": "npm run tsc && yarn node ./dist/app.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kkamara/-jwt-nodejs-security.git"
+    "url": "git+https://github.com/kkamara/jwt-nodejs-security.git"
   },
   "author": "https://github.com/kkamara",
   "license": "BSD-3-Clause",
   "bugs": {
-    "url": "https://github.com/kkamara/-jwt-nodejs-security/issues"
+    "url": "https://github.com/kkamara/jwt-nodejs-security/issues"
   },
-  "homepage": "https://github.com/kkamara/-jwt-nodejs-security#readme",
+  "homepage": "https://github.com/kkamara/jwt-nodejs-security#readme",
   "dependencies": {
     "@types/jsonwebtoken": "^9.0.2",
     "axios": "^0.21.1",
